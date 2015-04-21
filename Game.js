@@ -6,6 +6,8 @@ var fire = new Image();
 fire.src = 'fire.bmp';
 var shield = new Image();
 shield.src = 'shield.bmp';
+var MageAttack1 = new Image();
+MageAttack1.src = 'MageAttack1.bmp';
 var canvas = document.getElementById('canvas');
 var ctx = canvas.getContext('2d');
 var HEIGHT = 640;
@@ -26,10 +28,11 @@ var Dragon = {
 DrawDragon: function()
 {
   ctx.drawImage(Dragon1, 0,0,200,200,this.x,this.y,250,200);
-
+},
+DragonClaw: function()
+{
 
 },
-
 
 
 
@@ -48,7 +51,14 @@ DrawPlayer: function(direction)
 {
     if (this.Jumpkey)
     {
-        this.y -= 10;
+        if ( this.y > 400)
+        {
+          this.y -= 10;
+        }
+        if ( this.y < 400)
+        {
+          this.y += 10;
+        }
     }
     if (!this.Jumpkey && this.y <= 500)
     {
@@ -85,10 +95,21 @@ DrawShield: function()
     }
 
   }
-}
+},
+DrawAttack: function()
+{
+  if (this.attack)
+  {
+    console.log("attacking");
+    ctx.drawImage(MageAttack1, 0,0,100,350,this.x+55,this.y,40,150);
 
-
+  }
+},
 };
+
+
+
+
 var canvasHelper =
 {
 	drawMap: function()
@@ -149,11 +170,14 @@ function update(mod)
   {
     Player.shieldKey = false;
 	}
-  if(!keys[63])
+  if(keys[68])
   {
     Player.attack = true;
 	}
-
+  if(!keys[68])
+  {
+    Player.attack = false;
+  }
 }
 
 
@@ -163,6 +187,7 @@ render = function()
   canvasHelper.drawMap();
   Player.DrawPlayer(Player.direction);
   Player.DrawShield();
+  Player.DrawAttack();
   Dragon.DrawDragon();
   requestAnimationFrame(render);
 }
